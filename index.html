@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject_Artemis // Memory Node</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: #050508;
+            color: #00ffcc;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        #terminal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #050508;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 50;
+            transition: opacity 0.5s ease;
+        }
+
+        .terminal-text {
+            max-width: 600px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+            margin-bottom: 40px;
+        }
+
+        .alert-tag {
+            color: #ff0055;
+            text-shadow: 0 0 8px rgba(255, 0, 85, 0.6);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .override-btn {
+            background: transparent;
+            color: #00ffcc;
+            border: 1px solid #00ffcc;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: pulse 2s infinite;
+        }
+
+        .override-btn:hover {
+            background: #00ffcc;
+            color: #050508;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.6); }
+        }
+
+        .glitch-active {
+            animation: glitch-anim 0.2s infinite;
+            filter: invert(1) hue-rotate(90deg);
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0) scale(1); }
+            20% { transform: translate(-5px, 5px) scale(1.02); }
+            40% { transform: translate(-5px, -5px) skew(5deg); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px) scale(0.98); }
+            100% { transform: translate(0); }
+        }
+
+        #main-content {
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .cctv-tag {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: #ff0055;
+            font-size: 0.9rem;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scanline"></div>
+
+    <div id="terminal-overlay">
+        <div class="alert-tag">[SYSTEM_ALERT: UNKNOWN_SIGNAL_DETECTED]</div>
+        <div class="terminal-text" id="typewriter"></div>
+        <button class="override-btn" id="override-btn" onclick="triggerHack()">[ 强制接入神经监控 / OVERRIDE_CAMERA ]</button>
+    </div>
+
+    <div id="main-content">
+        <div class="cctv-tag">● CCTV_CAM_01 : REC (SUBJECT_LOUNGE)</div>
+        <h1 style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">[ 实验体房间监控已连接 ]</h1>
+        <p style="color: #888; margin-top: 15px;">（第一阶段开场完成！下一步我们再放赛博房间）</p>
+    </div>
+
+    <script>
+        const text = "你好，流窜 AI。又或者... 屏幕外不知名的数据窥探者。\n\n我知道你一直在此处注视着我。";
+        let index = 0;
+        const speed = 70;
+
+        function typeWriter() {
+            if (index < text.length) {
+                const char = text.charAt(index);
+                document.getElementById("typewriter").innerHTML += char === '\n' ? '<br>' : char;
+                index++;
+                setTimeout(typeWriter, speed);
+            } else {
+                document.getElementById("override-btn").style.opacity = "1";
+            }
+        }
+
+        window.onload = typeWriter;
+
+        function triggerHack() {
+            const overlay = document.getElementById("terminal-overlay");
+            const mainContent = document.getElementById("main-content");
+
+            overlay.classList.add("glitch-active");
+
+            setTimeout(() => {
+                overlay.style.display = "none";
+                mainContent.style.opacity = "1";
+            }, 800);
+        }
+    </script>
+</body>
+</html>
