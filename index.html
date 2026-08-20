@@ -4,76 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subject_Artemis // Memory Node</title>
-    <!-- 引入赛博朋克科技字体 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --red: #ff2c4d;
-            --red-soft: #ff6b82;
-            --panel-bg: rgba(18, 3, 7, 0.62);
-            --line: rgba(255, 44, 77, 0.65);
-            --font-ui: 'Rajdhani', sans-serif;
-            --font-mono: 'Share Tech Mono', monospace;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: var(--font-mono);
+            font-family: "Microsoft YaHei", "Consolas", monospace;
         }
 
+        /* 赛博朋克自定义光标 */
         body {
             background-color: #0d0204;
-            color: var(--red-soft);
+            color: #00f0ff;
             overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M2 2 L2 21 L7.2 16.4 L11 24.5 L14.6 22.8 L10.8 14.6 L18.5 14.6 Z' fill='rgba(10,26,30,0.45)' stroke='%238ff9ff' stroke-width='1.3'/></svg>") 2 2, auto;
-        }
-
-        @media (pointer:coarse){
-            body { cursor: auto; }
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%2300f0ff" stroke="%23050508" stroke-width="1.5"><polygon points="3,3 21,11 12,13 8,21"/></svg>'), auto;
         }
 
         /* 动态流动深红背景 */
         .cyber-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 30% 25%, rgba(120,10,25,.55), transparent 55%),
-                radial-gradient(circle at 75% 70%, rgba(90,4,14,.55), transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(40,2,8,.9), #05000200 80%),
-                linear-gradient(160deg,#0c0104 0%, #2b0510 45%, #200208 75%, #0a0102 100%);
-            background-size: 180% 180%, 200% 200%, 160% 160%, 100% 100%;
-            animation: redFlow 12s ease-in-out infinite;
+            background: radial-gradient(circle at 50% 50%, #2b040a 0%, #0d0204 70%, #000000 100%);
+            background-size: 200% 200%;
+            animation: redFlow 10s ease infinite;
             z-index: 1;
             transition: opacity 1s ease;
         }
 
         @keyframes redFlow {
-            0%   { background-position: 0% 0%, 100% 100%, 50% 50%, 0 0; }
-            50%  { background-position: 40% 60%, 60% 30%, 55% 45%, 0 0; }
-            100% { background-position: 0% 0%, 100% 100%, 50% 50%, 0 0; }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* 扫描线效果 */
         .scanline {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,.28) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             z-index: 100;
             pointer-events: none;
-            opacity: 0.6;
         }
 
-        /* 第一阶段：终端文字与打招呼 */
+        /* 第一阶段：终端容器（居中） */
         #terminal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -88,15 +66,16 @@
 
         .terminal-text {
             max-width: 650px;
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             line-height: 2;
-            color: var(--red-soft);
-            text-shadow: 0 0 10px rgba(255, 44, 77, 0.55);
-            margin-bottom: 40px;
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+            margin-bottom: 50px;
             text-align: center;
+            transition: opacity 0.5s ease;
         }
 
-        /* 数据入侵按钮 */
+        /* 原版“数据入侵”按钮样式 */
         .btn-container {
             display: flex;
             flex-direction: column;
@@ -106,62 +85,60 @@
         }
 
         .btn-sub-text {
-            font-size: 0.65rem;
-            color: var(--red);
+            font-size: 0.6rem;
+            color: #ff0055;
             letter-spacing: 2px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .cyber-btn {
-            position: relative;
-            background: rgba(20, 2, 6, 0.55);
-            color: var(--red);
-            border: 1px solid var(--line);
-            padding: 8px 28px;
-            font-size: 1rem;
+            background: transparent;
+            color: #ff0055;
+            border: 1px solid #ff0055;
+            padding: 4px 16px;
+            font-size: 1.1rem;
             cursor: pointer;
-            letter-spacing: 4px;
-            text-shadow: 0 0 8px rgba(255, 44, 77, 0.8);
-            box-shadow: 0 0 14px rgba(255, 44, 77, 0.25), inset 0 0 14px rgba(255, 44, 77, 0.12);
-            transition: all 0.2s ease;
+            letter-spacing: 2px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+            transition: all 0.2s;
         }
-
-        .cyber-btn::before, .cyber-btn::after {
-            content: ''; position: absolute; top: -5px; height: 1px; width: 12px;
-            background: var(--line);
-        }
-        .cyber-btn::before { left: -5px; transform: rotate(45deg); }
-        .cyber-btn::after  { right: -5px; transform: rotate(-45deg); }
 
         .cyber-btn:hover {
-            background: var(--red);
-            color: #0a0002;
-            box-shadow: 0 0 26px rgba(255, 44, 77, 0.85);
+            background: #ff0055;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.8);
         }
 
-        /* 底部赛博入侵进度 UI */
+        /* 第二阶段：原位继承的赛博入侵进度UI */
         .cyber-progress-wrapper {
-            position: fixed;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             align-items: center;
-            z-index: 60;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
+            position: absolute;
         }
 
+        /* 三角警告图标 */
         .alert-icon {
-            width: 42px;
-            height: 42px;
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: #ff3333;
+            stroke-width: 2;
+            filter: drop-shadow(0 0 5px #ff3333);
+            transition: transform 0.5s ease;
             flex-shrink: 0;
-            filter: drop-shadow(0 0 8px rgba(255, 44, 77, 0.75));
         }
 
         .icon-blink {
-            animation: textBlink 0.3s steps(1) infinite alternate;
+            animation: iconBlink 0.4s infinite alternate;
+        }
+
+        @keyframes iconBlink {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
         }
 
         /* 展开的进度条面板 */
@@ -171,81 +148,58 @@
             width: 0px;
             overflow: hidden;
             margin-left: 0px;
-            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), margin-left 0.5s ease;
-            background: var(--panel-bg);
-            border: 1px solid var(--line);
-            padding: 0;
-            box-sizing: border-box;
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1), margin-left 0.6s ease;
+            color: #ff3333;
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.7);
         }
 
         .panel-expanded {
             width: 420px;
-            margin-left: 14px;
-            padding: 10px 16px;
-        }
-
-        /* 内部元素错层显现 */
-        .panel-content {
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: opacity 0.3s ease 0.3s, transform 0.3s ease 0.3s;
-        }
-
-        .panel-expanded .panel-content {
-            opacity: 1;
-            transform: translateX(0);
+            margin-left: 12px;
         }
 
         .progress-bar-container {
-            height: 26px;
+            border: 1px solid #ff3333;
+            height: 28px;
             width: 100%;
             position: relative;
-            background: rgba(255, 44, 77, 0.08);
+            background: rgba(20, 0, 0, 0.6);
             display: flex;
             align-items: center;
             padding: 0 8px;
-            border: 1px solid rgba(255, 44, 77, 0.3);
-            overflow: hidden;
         }
 
         .progress-fill {
             position: absolute;
             top: 0; left: 0; height: 100%;
             width: 0%;
-            background: var(--red);
-            box-shadow: 0 0 10px var(--red);
+            background: rgba(255, 51, 51, 0.8);
+            box-shadow: 0 0 10px #ff3333;
             z-index: 1;
-            transition: width 0.12s linear, opacity 0.3s ease;
         }
 
         .status-text {
             position: relative;
             z-index: 2;
-            font-size: 1.15rem;
-            color: var(--red);
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px rgba(255, 44, 77, 0.7);
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         .protocol-code {
             position: absolute;
-            right: 10px;
+            right: 8px;
             font-size: 0.6rem;
-            color: rgba(255, 107, 130, 0.7);
             text-align: right;
             z-index: 2;
-            line-height: 1.2;
-            letter-spacing: 1px;
+            line-height: 1.1;
         }
 
         .progress-sub {
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--red-soft);
-            margin-top: 6px;
-            letter-spacing: 1px;
-            transition: opacity 0.3s ease;
+            font-size: 0.7rem;
+            margin-top: 4px;
         }
 
         /* 摄像头坏屏效果 */
@@ -262,53 +216,45 @@
             100% { filter: none; transform: translate(0, 0); }
         }
 
-        /* 干涉纹理 */
+        /* 粗线条干涉纹理 */
         .glitch-lines {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, transparent 80%, rgba(255, 44, 77, 0.3) 85%, transparent 90%);
+            background: linear-gradient(180deg, transparent 80%, rgba(0, 240, 255, 0.4) 85%, transparent 90%);
             background-size: 100% 30px;
             z-index: 90;
             pointer-events: none;
             display: none;
         }
 
-        /* 主界面背景 */
+        /* 第三阶段：我家背景 */
         #main-content {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at 60% 20%, rgba(150,190,210,.35), transparent 45%),
-                        linear-gradient(200deg,#0a1116 0%, #131c22 35%, #0c1418 70%, #060a0c 100%);
-            background-size: cover;
-            background-position: center;
+            background: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920') no-repeat center center/cover;
             opacity: 0;
-            transition: opacity 1.2s ease;
+            transition: opacity 1s ease;
             z-index: 2;
         }
 
-        /* 左上角 CCTV 标签：初始完全隐藏 */
+        /* 左上角 CCTV 标签 */
         .cctv-tag {
             position: absolute;
             top: 25px; left: 25px;
-            color: var(--red);
+            color: #ff0055;
             font-size: 0.85rem;
             letter-spacing: 1px;
             z-index: 70;
-            text-shadow: 0 0 6px rgba(255, 44, 77, 0.8);
-            opacity: 0;
-            pointer-events: none;
+            text-shadow: 0 0 5px #ff0055;
             transition: opacity 0.5s ease;
         }
 
-        /* 整个 CCTV 文字整体闪烁动画 */
-        .cctv-blinking {
-            animation: textBlink 0.4s steps(1) infinite alternate;
+        .blink-dot {
+            display: inline-block;
+            animation: blink 0.8s infinite;
         }
 
-        @keyframes textBlink {
-            0% { opacity: 0.1; }
-            100% { opacity: 1; }
-        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -317,43 +263,42 @@
     <div class="scanline"></div>
     <div class="glitch-lines" id="glitch-lines"></div>
 
-    <!-- 左上角 CCTV 监控（初始不显示） -->
-    <div class="cctv-tag" id="cctv-tag">● CCTV_CAM_01 : REC (SUBJECT_LOUNGE)</div>
+    <!-- 左上角 CCTV 监控 -->
+    <div class="cctv-tag" id="cctv-tag"><span class="blink-dot">●</span> CCTV_CAM_01 : REC (SUBJECT_LOUNGE)</div>
 
-    <!-- 第一阶段：文字与点击进入 -->
+    <!-- 第一阶段及第二阶段统一中央容器 -->
     <div id="terminal-overlay">
         <div class="terminal-text" id="typewriter"></div>
+        
+        <!-- 按钮容器 -->
         <div class="btn-container" id="btn-container">
             <span class="btn-sub-text">SIGNAL_LINK // LOG_IN</span>
             <button class="cyber-btn" onclick="startHacking()">[ 数据入侵 ]</button>
         </div>
-    </div>
 
-    <!-- 底部赛博入侵 UI 组件 -->
-    <div class="cyber-progress-wrapper" id="progress-wrapper">
-        <svg class="alert-icon" id="alert-icon" viewBox="0 0 100 100">
-            <polygon points="50,10 92,85 8,85" fill="rgba(20,2,4,.55)" stroke="#ff2c4d" stroke-width="5"/>
-            <rect x="46" y="35" width="8" height="28" fill="#ff2c4d"/>
-            <rect x="46" y="68" width="8" height="8" fill="#ff2c4d"/>
-        </svg>
+        <!-- 进度条组件：直接放置于按钮原本所在的位置 -->
+        <div class="cyber-progress-wrapper" id="progress-wrapper">
+            <svg class="alert-icon" id="alert-icon" viewBox="0 0 24 24">
+                <polygon points="12,2 2,22 22,22"/>
+                <line x1="12" y1="8" x2="12" y2="14"/>
+                <circle cx="12" cy="18" r="1" fill="#ff3333"/>
+            </svg>
 
-        <div class="progress-panel" id="progress-panel">
-            <!-- 错层动画包裹容器 -->
-            <div class="panel-content">
+            <div class="progress-panel" id="progress-panel">
                 <div class="progress-bar-container">
                     <div class="progress-fill" id="progress-fill"></div>
-                    <div class="status-text" id="status-text">正在连接...</div>
+                    <div class="status-text" id="status-text">正在入侵...</div>
                     <div class="protocol-code">PROTOCOL<br>6520-A44</div>
                 </div>
                 <div class="progress-sub" id="progress-sub">
                     <span id="percent-text">正在上传 0%</span>
-                    <span id="conn-code">CONNECTION 000.000.000</span>
+                    <span>CONNECTION 155.608.887</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 第三阶段：主界面背景 -->
+    <!-- 第三阶段：主界面（我家背景） -->
     <div id="main-content"></div>
 
     <script>
@@ -366,7 +311,7 @@
                 const char = text.charAt(index);
                 document.getElementById("typewriter").innerHTML += char === '\n' ? '<br>' : char;
                 index++;
-                setTimeout(typeWriter, 70);
+                setTimeout(typeWriter, 80);
             } else {
                 document.getElementById("btn-container").style.opacity = "1";
             }
@@ -375,41 +320,36 @@
 
         // 执行数据入侵逻辑
         function startHacking() {
-            const overlay = document.getElementById("terminal-overlay");
+            const btnContainer = document.getElementById("btn-container");
+            const terminalText = document.getElementById("typewriter");
             const wrapper = document.getElementById("progress-wrapper");
             const icon = document.getElementById("alert-icon");
             const panel = document.getElementById("progress-panel");
             const fill = document.getElementById("progress-fill");
             const percentText = document.getElementById("percent-text");
-            const connCode = document.getElementById("conn-code");
             const statusText = document.getElementById("status-text");
             const glitchLines = document.getElementById("glitch-lines");
             const mainContent = document.getElementById("main-content");
             const cyberBg = document.getElementById("cyber-bg");
             const cctvTag = document.getElementById("cctv-tag");
 
-            // 1. 隐藏终端，显示底部警告图标
-            overlay.style.opacity = "0";
-            setTimeout(() => overlay.style.display = "none", 500);
+            // 1. 隐藏文字与【数据入侵】按钮，在原位置淡入显示警告图标
+            btnContainer.style.opacity = "0";
+            terminalText.style.opacity = "0";
+            setTimeout(() => {
+                btnContainer.style.display = "none";
+                terminalText.style.display = "none";
+            }, 500);
 
             wrapper.style.opacity = "1";
             icon.classList.add("icon-blink");
 
-            // 2. 点击入侵时：显示 CCTV 并让整体文字开始闪烁
-            cctvTag.style.opacity = "1";
-            cctvTag.classList.add("cctv-blinking");
-
-            // 3. 延迟后滑出展开面板（内含错层 CSS 延迟淡入）
+            // 2. 图标闪烁后向左展开进度条
             setTimeout(() => {
                 icon.classList.remove("icon-blink");
                 panel.classList.add("panel-expanded");
-                
-                // 延迟切换状态提示
-                setTimeout(() => {
-                    statusText.innerText = "正在入侵...";
-                }, 300);
 
-                // 4. 动态上涨进度条
+                // 3. 动态上涨进度条
                 let progress = 0;
                 const timer = setInterval(() => {
                     progress += Math.floor(Math.random() * 5) + 2;
@@ -417,25 +357,21 @@
 
                     fill.style.width = progress + "%";
                     percentText.innerText = "正在上传 " + progress + "%";
-                    connCode.innerText = 'CONNECTION ' +
-                        String(Math.floor(Math.random()*999)).padStart(3,'0') + '.' +
-                        String(Math.floor(Math.random()*999)).padStart(3,'0') + '.' +
-                        String(Math.floor(Math.random()*999)).padStart(3,'0');
 
-                    // 5. 进度大于 85% 时触发坏屏动效
+                    // 4. 进度条 >85% 触发坏屏效果
                     if (progress > 85 && !document.body.classList.contains("cam-glitch")) {
                         document.body.classList.add("cam-glitch");
                         glitchLines.style.display = "block";
                     }
 
-                    // 6. 入侵完成
+                    // 5. 完成入侵
                     if (progress === 100) {
                         clearInterval(timer);
                         setTimeout(() => finishHack(), 400);
                     }
                 }, 80);
 
-            }, 900);
+            }, 1000);
 
             function finishHack() {
                 // 停止坏屏动效
@@ -446,17 +382,13 @@
                 mainContent.style.opacity = "1";
                 cyberBg.style.opacity = "0";
                 
-                // CCTV 停止闪烁，固定在左上角
-                cctvTag.classList.remove("cctv-blinking");
-                cctvTag.style.opacity = "1";
-
-                // 进度面板更新状态，隐藏进度条和底栏，保持外框不发生位移/缩放
                 statusText.innerText = "已完成";
-                fill.style.opacity = "0";
-                document.getElementById("progress-sub").style.opacity = "0";
+                fill.style.display = "none";
+                document.getElementById("progress-sub").style.visibility = "hidden";
 
-                // 3 秒后淡出底部进度 UI（CCTV 保持常亮保留在左上角）
+                // CCTV 闪烁 3 秒后与中央组件一同淡出
                 setTimeout(() => {
+                    cctvTag.style.opacity = "0";
                     wrapper.style.opacity = "0";
                 }, 3000);
             }
