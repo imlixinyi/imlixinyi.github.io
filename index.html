@@ -9,32 +9,51 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: "Microsoft YaHei", "Consolas", monospace;
         }
 
+        /* 赛博朋克自定义光标 (图2风格) */
         body {
-            background-color: #050508;
-            color: #00ffcc;
+            background-color: #0d0204;
+            color: #00f0ff;
             overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%2300f0ff" stroke="%23050508" stroke-width="1.5"><polygon points="3,3 21,11 12,13 8,21"/></svg>'), auto;
         }
 
+        /* 动态流动深红背景 */
+        .cyber-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #2b040a 0%, #0d0204 70%, #000000 100%);
+            background-size: 200% 200%;
+            animation: redFlow 10s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes redFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 扫描线效果 */
         .scanline {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             z-index: 100;
             pointer-events: none;
         }
 
+        /* 第一阶段：终端文字与打招呼 */
         #terminal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #050508;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -45,121 +64,328 @@
         }
 
         .terminal-text {
-            max-width: 600px;
-            font-size: 1.2rem;
-            line-height: 1.8;
-            text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
-            margin-bottom: 40px;
-        }
-
-        .alert-tag {
-            color: #ff0055;
-            text-shadow: 0 0 8px rgba(255, 0, 85, 0.6);
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .override-btn {
-            background: transparent;
-            color: #00ffcc;
-            border: 1px solid #00ffcc;
-            padding: 12px 24px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: pulse 2s infinite;
-        }
-
-        .override-btn:hover {
-            background: #00ffcc;
-            color: #050508;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.6); }
-        }
-
-        .glitch-active {
-            animation: glitch-anim 0.2s infinite;
-            filter: invert(1) hue-rotate(90deg);
-        }
-
-        @keyframes glitch-anim {
-            0% { transform: translate(0) scale(1); }
-            20% { transform: translate(-5px, 5px) scale(1.02); }
-            40% { transform: translate(-5px, -5px) skew(5deg); }
-            60% { transform: translate(5px, 5px); }
-            80% { transform: translate(5px, -5px) scale(0.98); }
-            100% { transform: translate(0); }
-        }
-
-        #main-content {
+            max-width: 650px;
+            font-size: 1.25rem;
+            line-height: 2;
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+            margin-bottom: 50px;
             text-align: center;
+        }
+
+        /* 图1样式“数据入侵”按钮 */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .btn-sub-text {
+            font-size: 0.6rem;
+            color: #ff0055;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+
+        .cyber-btn {
+            background: transparent;
+            color: #ff0055;
+            border: 1px solid #ff0055;
+            padding: 4px 16px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            letter-spacing: 2px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+            transition: all 0.2s;
+        }
+
+        .cyber-btn:hover {
+            background: #ff0055;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.8);
+        }
+
+        /* 第二阶段：底部赛博入侵进度UI (图3 ~ 图6) */
+        .cyber-progress-wrapper {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        /* 三角警告图标 */
+        .alert-icon {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: #ff3333;
+            stroke-width: 2;
+            filter: drop-shadow(0 0 5px #ff3333);
+            transition: transform 0.5s ease;
+        }
+
+        .icon-blink {
+            animation: iconBlink 0.4s infinite alternate;
+        }
+
+        @keyframes iconBlink {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        /* 展开的进度条面板 */
+        .progress-panel {
+            display: flex;
+            flex-direction: column;
+            width: 0px;
+            overflow: hidden;
+            margin-left: 0px;
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1), margin-left 0.6s ease;
+            color: #ff3333;
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.7);
+        }
+
+        .panel-expanded {
+            width: 420px;
+            margin-left: 12px;
+        }
+
+        .progress-bar-container {
+            border: 1px solid #ff3333;
+            height: 28px;
+            width: 100%;
+            position: relative;
+            background: rgba(20, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0; left: 0; height: 100%;
+            width: 0%;
+            background: rgba(255, 51, 51, 0.8);
+            box-shadow: 0 0 10px #ff3333;
+            z-index: 1;
+        }
+
+        .status-text {
+            position: relative;
+            z-index: 2;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .protocol-code {
+            position: absolute;
+            right: 8px;
+            font-size: 0.6rem;
+            text-align: right;
+            z-index: 2;
+            line-height: 1.1;
+        }
+
+        .progress-sub {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+        /* 摄像头坏屏效果 (图7) */
+        .cam-glitch {
+            animation: camGlitchAnim 0.08s infinite;
+        }
+
+        @keyframes camGlitchAnim {
+            0% { filter: hue-rotate(0deg) contrast(200%); transform: translate(2px, 0); }
+            20% { filter: hue-rotate(90deg) invert(0.8); transform: translate(-4px, 3px); }
+            40% { filter: contrast(300%) grayscale(0.5); transform: translate(5px, -2px); }
+            60% { filter: hue-rotate(180deg); transform: translate(-2px, -3px); }
+            80% { filter: invert(0.3); transform: translate(3px, 2px); }
+            100% { filter: none; transform: translate(0, 0); }
+        }
+
+        /* 粗线条干涉纹理 */
+        .glitch-lines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, transparent 80%, rgba(0, 240, 255, 0.4) 85%, transparent 90%);
+            background-size: 100% 30px;
+            z-index: 90;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* 第三阶段：我家背景 */
+        #main-content {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920') no-repeat center center/cover;
             opacity: 0;
             transition: opacity 1s ease;
+            z-index: 2;
         }
 
+        /* 左上角 CCTV 标签 */
         .cctv-tag {
             position: absolute;
-            top: 20px; left: 20px;
+            top: 25px; left: 25px;
             color: #ff0055;
-            font-size: 0.9rem;
-            animation: blink 1s infinite;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            z-index: 70;
+            text-shadow: 0 0 5px #ff0055;
+            transition: opacity 0.5s ease;
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
+        .blink-dot {
+            display: inline-block;
+            animation: blink 0.8s infinite;
         }
+
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
+    <div class="cyber-bg" id="cyber-bg"></div>
     <div class="scanline"></div>
+    <div class="glitch-lines" id="glitch-lines"></div>
 
+    <!-- 左上角 CCTV 监控 -->
+    <div class="cctv-tag" id="cctv-tag"><span class="blink-dot">●</span> CCTV_CAM_01 : REC (SUBJECT_LOUNGE)</div>
+
+    <!-- 第一阶段：文字与点击进入 -->
     <div id="terminal-overlay">
-        <div class="alert-tag">[SYSTEM_ALERT: UNKNOWN_SIGNAL_DETECTED]</div>
         <div class="terminal-text" id="typewriter"></div>
-        <button class="override-btn" id="override-btn" onclick="triggerHack()">[ 强制接入神经监控 / OVERRIDE_CAMERA ]</button>
+        <div class="btn-container" id="btn-container">
+            <span class="btn-sub-text">SIGNAL_LINK // LOG_IN</span>
+            <button class="cyber-btn" onclick="startHacking()">[ 数据入侵 ]</button>
+        </div>
     </div>
 
-    <div id="main-content">
-        <div class="cctv-tag">● CCTV_CAM_01 : REC (SUBJECT_LOUNGE)</div>
-        <h1 style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">[ 实验体房间监控已连接 ]</h1>
-        <p style="color: #888; margin-top: 15px;">（第一阶段开场完成！下一步我们再放赛博房间）</p>
+    <!-- 底部赛博入侵UI组件 -->
+    <div class="cyber-progress-wrapper" id="progress-wrapper">
+        <svg class="alert-icon" id="alert-icon" viewBox="0 0 24 24">
+            <polygon points="12,2 2,22 22,22"/>
+            <line x1="12" y1="8" x2="12" y2="14"/>
+            <circle cx="12" cy="18" r="1" fill="#ff3333"/>
+        </svg>
+
+        <div class="progress-panel" id="progress-panel">
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progress-fill"></div>
+                <div class="status-text" id="status-text">正在入侵...</div>
+                <div class="protocol-code">PROTOCOL<br>6520-A44</div>
+            </div>
+            <div class="progress-sub" id="progress-sub">
+                <span id="percent-text">正在上传 0%</span>
+                <span>CONNECTION 155.608.887</span>
+            </div>
+        </div>
     </div>
+
+    <!-- 第三阶段：主界面（我家背景） -->
+    <div id="main-content"></div>
 
     <script>
-        const text = "你好，流窜 AI。又或者... 屏幕外不知名的数据窥探者。\n\n我知道你一直在此处注视着我。";
+        // 打字机字幕效果
+        const text = "你好，流窜 AI...\n我知道你一直在此处注视着我。";
         let index = 0;
-        const speed = 70;
 
         function typeWriter() {
             if (index < text.length) {
                 const char = text.charAt(index);
                 document.getElementById("typewriter").innerHTML += char === '\n' ? '<br>' : char;
                 index++;
-                setTimeout(typeWriter, speed);
+                setTimeout(typeWriter, 80);
             } else {
-                document.getElementById("override-btn").style.opacity = "1";
+                document.getElementById("btn-container").style.opacity = "1";
             }
         }
-
         window.onload = typeWriter;
 
-        function triggerHack() {
+        // 执行数据入侵逻辑
+        function startHacking() {
             const overlay = document.getElementById("terminal-overlay");
+            const wrapper = document.getElementById("progress-wrapper");
+            const icon = document.getElementById("alert-icon");
+            const panel = document.getElementById("progress-panel");
+            const fill = document.getElementById("progress-fill");
+            const percentText = document.getElementById("percent-text");
+            const statusText = document.getElementById("status-text");
+            const glitchLines = document.getElementById("glitch-lines");
             const mainContent = document.getElementById("main-content");
+            const cyberBg = document.getElementById("cyber-bg");
+            const cctvTag = document.getElementById("cctv-tag");
 
-            overlay.classList.add("glitch-active");
+            // 1. 隐藏打字终端，显示居中的警告图标并闪烁
+            overlay.style.opacity = "0";
+            setTimeout(() => overlay.style.display = "none", 500);
 
+            wrapper.style.opacity = "1";
+            icon.classList.add("icon-blink");
+
+            // 2. 闪烁2次后，图标左移，展开进度条
             setTimeout(() => {
-                overlay.style.display = "none";
+                icon.classList.remove("icon-blink");
+                panel.classList.add("panel-expanded");
+
+                // 3. 动态上涨进度条
+                let progress = 0;
+                const timer = setInterval(() => {
+                    progress += Math.floor(Math.random() * 5) + 2;
+                    if (progress > 100) progress = 100;
+
+                    fill.style.width = progress + "%";
+                    percentText.innerText = "正在上传 " + progress + "%";
+
+                    // 4. 进度条过半/接近完成时（>85%）触发坏屏震撼动效
+                    if (progress > 85 && !document.body.classList.contains("cam-glitch")) {
+                        document.body.classList.add("cam-glitch");
+                        glitchLines.style.display = "block";
+                    }
+
+                    // 5. 完成入侵
+                    if (progress === 100) {
+                        clearInterval(timer);
+                        setTimeout(() => finishHack(), 400);
+                    }
+                }, 80);
+
+            }, 1000);
+
+            function finishHack() {
+                // 停止坏屏动效
+                document.body.classList.remove("cam-glitch");
+                glitchLines.style.display = "none";
+
+                // 切换显示背景与 UI“已完成”状态 (图8)
                 mainContent.style.opacity = "1";
-            }, 800);
+                cyberBg.style.opacity = "0";
+                
+                statusText.innerText = "已完成";
+                fill.style.display = "none";
+                document.getElementById("progress-sub").style.visibility = "hidden";
+
+                // CCTV 闪烁3秒后与完成框一起消失
+                setTimeout(() => {
+                    cctvTag.style.opacity = "0";
+                    wrapper.style.opacity = "0";
+                }, 3000);
+            }
         }
     </script>
 </body>
